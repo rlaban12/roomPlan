@@ -1,0 +1,12 @@
+# env 파일
+.env
+
+# 맥북 생성파일
+.DS_Store
+
+# 인텔리제이 파일
+.idea/
+
+# vscode 파일
+.vscode/
+
