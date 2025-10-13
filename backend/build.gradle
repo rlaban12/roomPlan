@@ -1,0 +1,72 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.spring'
+version = '0.0.1-SNAPSHOT'
+description = 'backend'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// 스프링 웹 및 롬복
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// jpa 및 mariadb
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+	// QueryDSL 의존성 추가
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+	// 쿼리파라미터 추가 외부로그 남기기
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.1'
+
+	// junit 단위 테스트
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Dotenv (.env 자동 로딩)
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+
+	// JWT 관련 의존성
+	//implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	//runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	//runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	// 이메일 전송 라이브러리
+	//implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// spring security
+	//testImplementation 'org.springframework.security:spring-security-test'
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
