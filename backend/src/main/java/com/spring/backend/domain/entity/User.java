@@ -55,4 +55,7 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
+    public boolean getUsername() {
+        return false;
+    }
 }

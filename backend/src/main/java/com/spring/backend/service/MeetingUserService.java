@@ -1,0 +1,245 @@
+package com.spring.backend.service;
+
+import com.spring.backend.domain.dto.request.LoginRequest;
+import com.spring.backend.domain.dto.request.SignupRequest;
+import com.spring.backend.domain.entity.EmailVerification;
+import com.spring.backend.domain.entity.User;
+import com.spring.backend.jwt.JwtTokenProvider;
+import com.spring.backend.repository.EmailVerificationRepository;
+import com.spring.backend.repository.UserRepository;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+@Transactional
+public class MeetingUserService {
+
+    // 메일 발송인의 정보
+    @Value("${spring.mail.username}")
+    private String mailHost;
+
+    // 이메일 발송을 위한 의존객체
+    private final JavaMailSender mailSender;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider tokenProvider;
+
+    private final UserRepository userRepository;
+    private final EmailVerificationRepository emailVerificationRepository;
+
+    // 이메일 중복확인 처리
+    @Transactional(readOnly = true)
+    public boolean checkEmailDuplicate(String email) {
+
+        // 중복확인
+        boolean flag = userRepository.existsByEmail(email);
+        log.info("Checking email {} is duplicate: {}", email, flag);
+
+        // 이메일이 중복되었지만 회원가입이 마무리되지않은 회원은
+        // 중복을 무시하고 인증코드를 재발송
+        if (flag && notFinish(email)) {
+            return false;
+        }
+
+        // 사용가능한 이메일인 경우 인증메일 발송
+        if (!flag) processSignup(email);
+
+        return flag;
+
+    }
+
+    private boolean notFinish(String email) {
+
+        // 회원가입이 중단된 회원정보를 조회
+        User foundUser = userRepository.findByEmail(email).orElseThrow();
+
+        // 실제로 중단된 회원인지 재확인
+        if (!foundUser.isEmailVerified() || foundUser.getPassword() == null) {
+            // 인증코드 재생성하고 이메일을 발송
+            Optional<EmailVerification> ev = emailVerificationRepository.findByUser(foundUser);
+
+            // 1. 인증코드를 과거에 받은 경우 - UPDATE
+            if (ev.isPresent()) {
+                updateVerificationCode(email, ev.get());
+            } else {
+                // 2. 받지 않은 경우 - 인증을 끝내면 인증코드가 삭제됨 - INSERT
+                generateAndSendCode(email, foundUser);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    // 인증 코드를 발송할 때 사용할 임시 회원가입 로직
+    // 인증코드를 데이터베이스에 저장하려면 회원정보가 필요
+    private void processSignup(String email) {
+        // 1. 임시 회원가입
+        User tempUser = User.builder()
+                .email(email)
+                .build();
+
+        User savedUser = userRepository.save(tempUser);
+
+        generateAndSendCode(email, savedUser);
+    }
+
+    private void generateAndSendCode(String email, User savedUser) {
+        // 2. 인증 메일 발송
+        String code = sendVerificationEmail(email);
+
+        // 3. 인증 코드와 만료시간을 DB에 저장
+        EmailVerification verification = EmailVerification.builder()
+                .verificationCode(code)
+                .expiryDate(LocalDateTime.now().plusMinutes(5)) // 만료시간 5분 설정
+                .user(savedUser) // FK 설정
+                .build();
+        emailVerificationRepository.save(verification);
+    }
+
+    // 이메일 인증코드 발송 로직
+    private String sendVerificationEmail(String email) {
+
+        // 인증코드 생성
+        String code = generateCode();
+
+        // 메일 전송 로직
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper messageHelper
+                    = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+
+            // 누구에게 이메일을 보낼지
+            messageHelper.setTo(email);
+
+            // 누가 보내는 건지
+            messageHelper.setFrom(mailHost);
+
+            // 이메일 제목 설정
+            messageHelper.setSubject("[인증메일] my diary App 가입 인증 메일입니다.");
+            // 이메일 내용 설정
+            messageHelper.setText(
+                    "인증 코드: <b style=\"font-weight: 700; letter-spacing: 5px; font-size: 30px;\">" + code + "</b>"
+                    , true
+            );
+
+            // 메일 보내기
+            mailSender.send(mimeMessage);
+
+            log.info("{} 님에게 이메일이 발송되었습니다.", email);
+            return code;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("메일 발송에 실패했습니다.");
+        }
+
+    }
+
+    // 무작위로 1000~9999 사이의 랜덤 숫자를 생성
+    private String generateCode() {
+        return String.valueOf((int) (Math.random() * 9000) + 1000);
+    }
+
+    /**
+     * 클라이언트가 전송한 인증코드를 검증하는 처리
+     */
+    public boolean isMatchCode(String email, String code) {
+
+        // 이메일을 통해 사용자의 PK를 조회
+        User eventUser = userRepository.findByEmail(email).orElseThrow();
+
+        // 사용자의 인증코드를 FK를 통해 데이터베이스에서 조회
+        EmailVerification verification
+                = emailVerificationRepository.findByUser(eventUser).orElseThrow();
+
+        // 코드가 일치하고 만료시간이 지나지 않았는지 체크
+        if (
+                code.equals(verification.getVerificationCode())
+                        && verification.getExpiryDate().isAfter(LocalDateTime.now())
+        ) {
+            // 이메일 인증 완료처리
+            eventUser.completeVerifying();
+            userRepository.save(eventUser);
+
+            // 인증번호를 데이터베이스에서 삭제
+            emailVerificationRepository.delete(verification);
+
+            return true;
+        }
+        // 인증코드가 틀렸거나 만료된 경우 자동으로 인증코드를 재발송
+        updateVerificationCode(email, verification);
+        return false;
+    }
+
+    // 인증코드 재발급 처리
+    private void updateVerificationCode(String email, EmailVerification verification) {
+
+        // 1. 새인증코드를 생성하고 메일을 재발송
+        String newCode = sendVerificationEmail(email);
+
+        // 2. 데이터베이스에 인증코드와 만료시간을 갱신
+        verification.updateNewCode(newCode);
+        emailVerificationRepository.save(verification);
+    }
+
+    // 회원가입 마무리 처리
+    public void confirmSignup(SignupRequest dto) {
+
+        // 임시 회원가입된 회원정보를 조회
+        User foundUser = userRepository.findByEmail(dto.email()).orElseThrow(
+                () -> new RuntimeException("임시 회원가입된 정보가 없습니다.")
+        );
+        // 이메일인증을 받았는지 확인
+        if (!foundUser.isEmailVerified()) {
+            throw new RuntimeException("이메일 인증이 완료되지 않은 회원입니다.");
+        }
+
+        // 데이터베이스에 임시 회원가입된 회원정보의 패스워드와 생성시간을 채워넣기
+        foundUser.confirm(passwordEncoder.encode(dto.password()));
+        userRepository.save(foundUser);
+    }
+
+    // 로그인 검증하기
+    public Map<String, Object> authenticate(LoginRequest dto) {
+
+        // 이메일을 통해 회원가입 여부 확인
+        User foundUser
+                = userRepository.findByEmail(dto.email()).orElseThrow(
+                () -> new RuntimeException("가입된 회원이 아닙니다.")
+        );
+
+        // 회원가입을 중단한 회원에 대해서
+        if (!foundUser.isEmailVerified() || foundUser.getPassword() == null) {
+            throw new RuntimeException("회원가입이 완료되지 않은 회원입니다. 다시 가입해주세요.");
+        }
+        // 패스워드 일치 검사
+        if (!passwordEncoder.matches(dto.password(), foundUser.getPassword())) {
+            throw new RuntimeException("비밀번호가 틀렸습니다.");
+        }
+
+        // 로그인 성공 - 토큰 발급
+        String accessToken = tokenProvider.createAccessToken(dto.email());
+
+        return Map.of(
+                "token", accessToken,
+                "message", "로그인에 성공했습니다.",
+                "email", dto.email(),
+                "role", foundUser.getRole().toString()
+        );
+    }
+
+}
