@@ -6,7 +6,7 @@ import com.spring.backend.domain.entity.MeetingSchedule;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record meetingCreate(
+public record MeetingCreate(
         String department,
         String meetingDetails,
         @JsonFormat(pattern = "yyyy-MM-dd")

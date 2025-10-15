@@ -1,6 +1,6 @@
 package com.spring.backend.domain.entity;
 
-import com.spring.backend.domain.dto.request.meetingCreate;
+import com.spring.backend.domain.dto.request.MeetingCreate;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,7 +49,7 @@ public class MeetingSchedule {
     private User user;
 
     // 수정 편의 메서드
-    public void changeMeeting(meetingCreate dto) {
+    public void changeMeeting(MeetingCreate dto) {
         this.department = dto.department();
         this.meetingDetails = dto.meetingDetails();
         this.usageDate = dto.usageDate();

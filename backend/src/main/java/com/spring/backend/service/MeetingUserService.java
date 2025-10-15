@@ -129,7 +129,7 @@ public class MeetingUserService {
             messageHelper.setFrom(mailHost);
 
             // 이메일 제목 설정
-            messageHelper.setSubject("[인증메일] my diary App 가입 인증 메일입니다.");
+            messageHelper.setSubject("[인증메일] roomPlan 가입 인증 메일입니다.");
             // 이메일 내용 설정
             messageHelper.setText(
                     "인증 코드: <b style=\"font-weight: 700; letter-spacing: 5px; font-size: 30px;\">" + code + "</b>"

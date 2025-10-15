@@ -1,6 +1,7 @@
 package com.spring.backend.repository;
 
 import com.spring.backend.domain.entity.MeetingSchedule;
+import com.spring.backend.domain.entity.User;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,4 +11,5 @@ public interface MeetingScheduleRepository extends JpaRepository<MeetingSchedule
 
     Optional<MeetingSchedule> findByMeetingId(Long userId);
 
+    Slice<MeetingSchedule> findAllByUser(User user);
 }
