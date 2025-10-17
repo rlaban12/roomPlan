@@ -1,0 +1,42 @@
+import {Form, NavLink, useRouteLoaderData} from 'react-router-dom';
+import styles from './MainNavigation.module.scss';
+
+const MainNavigation = () => {
+
+  const userData = useRouteLoaderData('user-token-data');
+
+  return (
+      <header className={styles.header}>
+        <nav>
+          <ul className={styles.list}>
+            <li>
+              <NavLink
+                  to='/'
+              >
+                Home
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                  to='/meeting'
+              >
+                MeetingSchedule
+              </NavLink>
+            </li>
+
+            {
+                userData &&
+                <li>
+                  <Form method='POST' action='/logout'>
+                    <button style={{ width: '100%' }}>Logout</button>
+                  </Form>
+                </li>
+            }
+
+          </ul>
+        </nav>
+      </header>
+  );
+};
+
+export default MainNavigation;
