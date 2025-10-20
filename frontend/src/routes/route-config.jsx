@@ -1,12 +1,15 @@
 import {createBrowserRouter} from 'react-router-dom';
 // import {authCheckLoader, meetingScheduleDetailLoader, userDataLoader} from '../loader/meetingSchedules-loader.js';
 // import {deleteAction, saveAction as manipulateAction, loginAction, logoutAction} from '../loader/meetingSchedule-actions.js';
-import {userDataLoader} from '../loader/meetingSchedules-loader.js';
+import {authCheckLoader, userDataLoader} from '../loader/meetingSchedules-loader.js';
 import {loginAction, logoutAction} from '../loader/meetingSchedule-actions.js';
 import RootLayout from '../layouts/RootLayout.jsx';
 import HomeLayout from '../layouts/HomeLayout.jsx';
 import ErrorPage from '../pages/ErrorPage.jsx';
 import WelcomePage from '../pages/WelcomePage.jsx';
+import SignUpPage from '../pages/SignUpPage.jsx';
+import MeetingScheduleLayout from "../layouts/MeetingScheduleLayout.jsx";
+import MeetingSchedulePage from '../pages/MeetingSchedulePage.jsx';
 
 const router = createBrowserRouter([
     {
@@ -27,10 +30,10 @@ const router = createBrowserRouter([
               element: <WelcomePage />,
               action: loginAction,
             },
-            // {
-            //   path: '/sign-up',
-            //   element: <SignUpPage />
-            // },
+            {
+              path: '/sign-up',
+              element: <SignUpPage />
+            },
             {
               path: '/logout',
               action: logoutAction
@@ -38,7 +41,17 @@ const router = createBrowserRouter([
           ]
         },
         {
-
+          path: 'meeting',
+          element: <MeetingScheduleLayout/>,
+          loader: authCheckLoader, // 라우트 가드
+          children: [
+            {
+              index: true,
+              element: <MeetingSchedulePage/>,
+              // loader함수는 언제 실행되냐? 페이지가 라우팅될 때 트리거됨
+              // loader: eventListLoader
+            },
+          ]
         }
       ]
     },
