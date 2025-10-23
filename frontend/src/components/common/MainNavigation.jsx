@@ -8,6 +8,7 @@ const MainNavigation = () => {
   return (
       <header className={styles.header}>
         <nav>
+          <span className={styles.logo}>roomPlan</span>
           <ul className={styles.list}>
             <li>
               <NavLink

@@ -11,7 +11,6 @@ const LoginForm = () => {
         <Form
             method="post"
             className={styles.form}>
-          <h1>roomPlan</h1>
           <h1>Log in</h1>
           <p>
             <label htmlFor="email">Email</label>
