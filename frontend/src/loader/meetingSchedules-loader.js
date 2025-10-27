@@ -13,7 +13,9 @@ export const meetingScheduleListLoader = async () => {
 
 export const meetingScheduleDetailLoader = async ({ params }) => {
 
-  return await fetchWithAuth(`${MEETING_API_URL}/${params.eventId}`);
+  // console.log('call detail loader')
+  // console.log('params: ', params);
+  return await fetchWithAuth(`${MEETING_API_URL}/${params.meetingId}`);
 }
 
 // 토큰데이터를 파싱하는 함수

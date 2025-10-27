@@ -1,7 +1,5 @@
 import {createBrowserRouter} from 'react-router-dom';
-// import {authCheckLoader, meetingScheduleDetailLoader, userDataLoader} from '../loader/meetingSchedules-loader.js';
-// import {deleteAction, saveAction as manipulateAction, loginAction, logoutAction} from '../loader/meetingSchedule-actions.js';
-import {authCheckLoader, userDataLoader} from '../loader/meetingSchedules-loader.js';
+import {authCheckLoader, meetingScheduleDetailLoader, userDataLoader} from '../loader/meetingSchedules-loader.js';
 import {deleteAction, saveAction as manipulateAction, loginAction, logoutAction} from '../loader/meetingSchedule-actions.js';
 import RootLayout from '../layouts/RootLayout.jsx';
 import HomeLayout from '../layouts/HomeLayout.jsx';
@@ -11,6 +9,7 @@ import SignUpPage from '../pages/SignUpPage.jsx';
 import MeetingScheduleLayout from "../layouts/MeetingScheduleLayout.jsx";
 import MeetingSchedulePage from '../pages/MeetingSchedulePage.jsx';
 import NewMeetingSchedulePage from '../pages/NewMeetingSchedulePage.jsx';
+import MeetingScheduleDetailPage from '../pages/MeetingScheduleDetailPage.jsx';
 
 const router = createBrowserRouter([
     {
@@ -58,6 +57,12 @@ const router = createBrowserRouter([
               // action함수는 CUD를 트리거
               action: manipulateAction
             },
+            {
+              path: ':meetingId',
+              element: <MeetingScheduleDetailPage />,
+              loader: meetingScheduleDetailLoader,
+              action: deleteAction
+            }
           ]
         }
       ]

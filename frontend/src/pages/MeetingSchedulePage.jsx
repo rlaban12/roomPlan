@@ -24,6 +24,7 @@ const MeetingSchedulePage = () => {
       if (!grouped[dateKey]) grouped[dateKey] = [];
 
       grouped[dateKey].push({
+        id: meeting.meetingId,
         dept: meeting.department,
         start: meeting.startTime,
         end: meeting.endTime,

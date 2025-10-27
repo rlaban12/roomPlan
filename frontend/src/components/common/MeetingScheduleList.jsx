@@ -45,16 +45,20 @@ const MeetingScheduleList = ({weeks, year, setYear, month, setMonth, meetingsByD
                             <>
                               <div className={styles['date']}>{day}</div>
                               {meetingsByDate[dateKey] ? (
-                                  <NavLink className={styles['meeting-list']}>
-                                    {meetingsByDate[dateKey].map((m, idx) => (
-                                        <div key={idx} className={styles['meeting-item']}>
+                                  meetingsByDate[dateKey].map((m, idx) => (
+                                      <NavLink
+                                          key={idx}
+                                          to={`/meeting/${m.id}`} // 각 회의 고유 id로 이동
+                                          className={styles['meeting-list']}
+                                      >
+                                        <div className={styles['meeting-item']}>
                                           <p className={styles['dept']}>{m.dept}</p>
                                           <p className={styles['time']}>
                                             {m.start} ~ {m.end}
                                           </p>
                                         </div>
-                                    ))}
-                                  </NavLink>
+                                      </NavLink>
+                                  ))
                               ) : (
                                   <div className={styles['empty']}></div>
                               )}
