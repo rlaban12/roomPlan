@@ -21,8 +21,8 @@ const MeetingScheduleItem = ({meetingSchedule}) => {
   return (
       <article className={styles.meeting}>
         <h1>{department}</h1>
-        <time>{usageDate}</time>
         <p>{meetingDetails}</p>
+        <p>{usageDate}</p>
         <p>{startTime} ~ {endTime}</p>
         <menu className={styles.actions}>
           <Link to='edit'>Edit</Link>
@@ -30,7 +30,6 @@ const MeetingScheduleItem = ({meetingSchedule}) => {
         </menu>
       </article>
   );
-
 
 };
 

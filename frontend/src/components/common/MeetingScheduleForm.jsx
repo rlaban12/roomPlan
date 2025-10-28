@@ -47,7 +47,7 @@ const MeetingScheduleForm = ({ method, meetingSchedule={} }) => {
           />
         </p>
         <p>
-          <label htmlFor='usageDate'>Usage Date</label>
+          <label htmlFor='usageDate'>UsageDate</label>
           <input
               id='usageDate'
               type='date'

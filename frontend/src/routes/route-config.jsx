@@ -10,6 +10,7 @@ import MeetingScheduleLayout from "../layouts/MeetingScheduleLayout.jsx";
 import MeetingSchedulePage from '../pages/MeetingSchedulePage.jsx';
 import NewMeetingSchedulePage from '../pages/NewMeetingSchedulePage.jsx';
 import MeetingScheduleDetailPage from '../pages/MeetingScheduleDetailPage.jsx';
+import EditPage from '../pages/EditPage.jsx';
 
 const router = createBrowserRouter([
     {
@@ -62,6 +63,12 @@ const router = createBrowserRouter([
               element: <MeetingScheduleDetailPage />,
               loader: meetingScheduleDetailLoader,
               action: deleteAction
+            },
+            {
+              path: ':meetingId/edit',
+              element: <EditPage />,
+              loader: meetingScheduleDetailLoader,
+              action: manipulateAction
             }
           ]
         }

@@ -13,7 +13,7 @@ public record MeetingScheduleDetailResponse(
         String id,
         String department,
         String meetingDetails,
-        @JsonProperty("start-date")
+        @JsonProperty("usageDate")
         @JsonFormat(pattern = "yyyy년 MM월 dd일")
         LocalDate usageDate,
         @JsonFormat(pattern = "HH:mm")
