@@ -1,0 +1,7 @@
+services:
+  app:
+    image: backend:latest
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_PROFILES_ACTIVE: 'default'
