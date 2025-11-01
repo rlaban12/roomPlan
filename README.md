@@ -45,31 +45,12 @@ roomPlan/
 
 ## 프로젝트 개발 문서
 - [요구사항 명세서](docs/1_requirements.md) - 프로젝트의 기능 및 비기능 요구사항
-- [시스템 아키텍처](docs/2_architecture.md) - 시스템의 3계층 아키텍처 구성 및 기술 스택
-- [API 명세서](docs/3_api-spec-openapi.md) - RESTful API 엔드포인트 및 JSON 형식
-- [개념 ERD](docs/4_concept_erd.png) - 데이터베이스 개념 다이어그램
-- [논리 ERD](docs/5_logical_erd.png) - 데이터베이스 논리 다이어그램
-- [UI 와이어프레임](docs/6_wireframe.png) - UI 와이어프레임
-
-## 기술 스택
-### 백엔드
-- Spring Boot (Java)
-- Spring JPA
-- Spring QueryDsl
-- Spring Security
-- MariaDB (RDBMS)
-
-### 프론트엔드
-- React
-- React Router
-- JavaScript
-- SCSS/CSS
-
-### 도구
-- Git/GitHub (버전 관리)
-- Postman (API 테스트)
-- Gradle (의존성 관리)
-- IntelliJ (IDE)
+- [시스템 아키텍처](docs/2_architecture.png) - 시스템의 아키텍처(백엔드, 프론트엔드, 배포)
+- [기술 스택](docs/3_teach-stack.md) - 기술 스택
+- [API 명세서](docs/4_api-spec-openapi.md) - RESTful API 엔드포인트 및 JSON 형식
+- [개념 ERD](docs/5_concept_erd.png) - 데이터베이스 개념 다이어그램
+- [논리 ERD](docs/6_logical_erd.png) - 데이터베이스 논리 다이어그램
+- [UI 와이어프레임](docs/7_wireframe.png) - UI 와이어프레임
 
 ## 설치 및 설정
 
@@ -109,3 +90,4 @@ roomPlan/
 ## 트러블 슈팅
 - [벡엔드 트러블 슈팅](trouble-shooting/backend-trouble-shooting.png) - 백엔드 트러블 슈팅
 - [프론트엔드 트러블 슈팅](trouble-shooting/frontend-trouble-shooting.png) - 프론트엔드 트러블 슈팅
+- [배포 트러블 슈팅](trouble-shooting/ops-trouble-shooting.png) - 배포 트러블 슈팅

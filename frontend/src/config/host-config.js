@@ -15,8 +15,8 @@ let backendHostName;
 
 if (clientHostName === 'localhost') {
   backendHostName = `http://localhost:${LOCAL_PORT}`;
-} else if (clientHostName === 'strawberry.com') {
-  backendHostName = `https://api.berry.com`;
+} else if (clientHostName === 'kimsweb.site') {
+  backendHostName = `https://api.kimsweb.site`;
 }
 
 // 기본 API 엔드포인트 저장
