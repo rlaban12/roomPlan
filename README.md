@@ -19,27 +19,6 @@ RoomPlan은 조직이 회의실 일정을 관리하고 공유할 수 있도록 �
 - [개발 일정 마일드스톤](mild-stone/roomPlan_mild_stone.png) - 개발 일정 마일드스톤
 
 ## 프로젝트 구조
-```
-roomPlan/
-├── backend/               # 스프링 부트 백엔드 애플리케이션
-│   ├── src/               # 소스 코드
-│   ├── build.gradle       # Gradle 빌드 설정
-│   └── ...
-├── frontend/              # React 프론트엔드 애플리케이션
-│   ├── src/               # 소스 코드
-│   ├── public/            # 정적 자산
-│   ├── package.json       # NPM 패키지 설정
-│   └── ...
-└── docs/                  # 프로젝트 문서
-    ├── 1_requirements.md  # 요구사항 명세
-    ├── 2_architecture.md  # 시스템 아키텍처
-    ├── 3_api-spec-openapi.md # API 명세
-    ├── 4_concept_erd.png  # 개념적 ERD
-    ├── 5_logical_erd.png  # 논리적 ERD
-    └── 6_wireframe.png    # UI 와이어프레임
-```
-
-### 프로젝트 자세한 구조
 - [backend](direct-structure/backend-directory.md) - 벡엔드 디렉토리 구조
 - [frontend](direct-structure/frontend-directory.md) - 프론트엔드 디렉토리 구조
 
@@ -88,6 +67,6 @@ roomPlan/
    ```
 
 ## 트러블 슈팅
-- [벡엔드 트러블 슈팅](trouble-shooting/backend-trouble-shooting.png) - 백엔드 트러블 슈팅
+- [벡엔드 트러블 슈팅](trouble-shooting/backend-trouble-shooting.png) - 벡엔드 트러블 슈팅
 - [프론트엔드 트러블 슈팅](trouble-shooting/frontend-trouble-shooting.png) - 프론트엔드 트러블 슈팅
 - [배포 트러블 슈팅](trouble-shooting/ops-trouble-shooting.png) - 배포 트러블 슈팅
